@@ -6,7 +6,7 @@
 #include <Arduino_JSON.h>
 
 // Замените на свои сетевые учетные данные
-const char *ssid = "<..json..>";
+const char *ssid = "<..python..>";
 const char *password = "12345679";
 
 // Создаем объект AsyncWebServer на порту 80
