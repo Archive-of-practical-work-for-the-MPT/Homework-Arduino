@@ -1,0 +1,70 @@
+{
+  "version": 1,
+  "author": "Alexander",
+  "editor": "wokwi",
+  "parts": [
+    { "type": "wokwi-breadboard-half", "id": "bb1", "top": -108.6, "left": -74, "attrs": {} },
+    { "type": "wokwi-arduino-uno", "id": "uno", "top": 144.6, "left": -77.4, "attrs": {} },
+    { "type": "wokwi-led", "id": "led1", "top": -90, "left": -5.8, "attrs": { "color": "red" } },
+    {
+      "type": "wokwi-led",
+      "id": "led2",
+      "top": -90,
+      "left": 51.8,
+      "attrs": { "color": "yellow" }
+    },
+    {
+      "type": "wokwi-led",
+      "id": "led3",
+      "top": -90,
+      "left": 109.4,
+      "attrs": { "color": "green" }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "r1",
+      "top": -4.8,
+      "left": -19.75,
+      "rotate": 90,
+      "attrs": { "value": "1000" }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "r2",
+      "top": -4.8,
+      "left": 37.85,
+      "rotate": 90,
+      "attrs": { "value": "1000" }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "r3",
+      "top": -4.8,
+      "left": 95.45,
+      "rotate": 90,
+      "attrs": { "value": "1000" }
+    }
+  ],
+  "connections": [
+    [ "uno:8", "bb1:14t.c", "red", [ "v0" ] ],
+    [ "uno:2", "bb1:20t.c", "red", [ "v0" ] ],
+    [ "uno:13", "bb1:8t.c", "red", [ "v-192", "h-28.4" ] ],
+    [ "bb1:bn.7", "uno:GND.1", "black", [ "v0" ] ],
+    [ "led2:A", "bb1:14t.b", "", [ "$bb" ] ],
+    [ "led2:C", "bb1:13t.b", "", [ "$bb" ] ],
+    [ "led3:A", "bb1:20t.b", "", [ "$bb" ] ],
+    [ "led3:C", "bb1:19t.b", "", [ "$bb" ] ],
+    [ "led1:A", "bb1:8t.b", "", [ "$bb" ] ],
+    [ "led1:C", "bb1:7t.b", "", [ "$bb" ] ],
+    [ "bb1:bn.5", "bb1:7b.i", "black", [ "v0" ] ],
+    [ "r1:1", "bb1:7t.d", "", [ "$bb" ] ],
+    [ "r1:2", "bb1:7b.h", "", [ "$bb" ] ],
+    [ "r2:1", "bb1:13t.d", "", [ "$bb" ] ],
+    [ "r2:2", "bb1:13b.h", "", [ "$bb" ] ],
+    [ "r3:1", "bb1:19t.d", "", [ "$bb" ] ],
+    [ "r3:2", "bb1:19b.h", "", [ "$bb" ] ],
+    [ "bb1:bn.11", "bb1:13b.j", "black", [ "v0" ] ],
+    [ "bb1:19b.j", "bb1:bn.16", "black", [ "v0" ] ]
+  ],
+  "dependencies": {}
+}
