@@ -1,0 +1,25 @@
+{
+  "version": 1,
+  "author": "Alexander",
+  "editor": "wokwi",
+  "parts": [
+    { "type": "wokwi-breadboard-half", "id": "bb1", "top": -108.6, "left": -112.4, "attrs": {} },
+    { "type": "wokwi-arduino-uno", "id": "uno", "top": 163.8, "left": -115.8, "attrs": {} },
+    { "type": "wokwi-analog-joystick", "id": "joystick1", "top": -77.4, "left": 5.4, "attrs": {} }
+  ],
+  "connections": [
+    [ "joystick1:VCC", "bb1:14b.i", "", [ "$bb" ] ],
+    [ "joystick1:VERT", "bb1:15b.i", "", [ "$bb" ] ],
+    [ "joystick1:HORZ", "bb1:16b.i", "", [ "$bb" ] ],
+    [ "joystick1:SEL", "bb1:17b.i", "", [ "$bb" ] ],
+    [ "joystick1:GND", "bb1:18b.i", "", [ "$bb" ] ],
+    [ "uno:5V", "bb1:bp.1", "red", [ "v38.3", "h-217", "v-9.6" ] ],
+    [ "uno:GND.1", "bb1:bn.8", "black", [ "v0" ] ],
+    [ "joystick1:GND", "bb1:bn.15", "black", [ "v0" ] ],
+    [ "joystick1:VCC", "bb1:bp.11", "red", [ "v0" ] ],
+    [ "joystick1:VERT", "uno:A1", "#8f4814", [ "v115.2", "h144", "v220.8", "h-86.4" ] ],
+    [ "joystick1:HORZ", "uno:A0", "#8f4814", [ "v96", "h153.6", "v249.6", "h-124.8" ] ],
+    [ "joystick1:SEL", "uno:2", "orange", [ "v86.4", "h57.6" ] ]
+  ],
+  "dependencies": {}
+}
