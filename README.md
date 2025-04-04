@@ -18,7 +18,7 @@
 * [Практическая работа 10](https://github.com/Archive-of-practical-work-for-the-MPT/Homework-Arduino/tree/WeMosBot) - Работа с WiFi-модулем WeMos D1 R2. Разработка Telegram-бота
 * [Практическая работа 11](https://github.com/Archive-of-practical-work-for-the-MPT/Homework-Arduino/tree/Bluetooth) - Создание гирлянды с настройкой через Bluetooth-модуль HC-06
 * [Практическая работа 12](https://github.com/Archive-of-practical-work-for-the-MPT/Homework-Arduino/tree/RFID) - Работа с RFID-модулем
-* Практическая работа 13 - Взаимодействие Arduino и Unity
+* [Практическая работа 13](https://github.com/Archive-of-practical-work-for-the-MPT/Homework-Arduino/tree/unity) - Взаимодействие Arduino и Unity
 
 # Практическая работа 9 - Интерфейс UART
 
