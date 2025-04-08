@@ -8,12 +8,11 @@
 #include <UniversalTelegramBot.h>
 #include <Servo.h>
 
-// Имя и пароль вашей сети Wifi 
-#define WIFI_SSID "<..python..>"
-#define WIFI_PASSWORD "12345679"
-// Телеграм Бот Токен, можно получить у бота @BotFather в Телеграмм 
-#define BOT_TOKEN "8109941833:AAENuC8qYv7QLLYD-PCukzLWkZbW3O8Rtb8"  // НЕ ДЕЛИТЕСЬ ИМ
-
+// Имя и пароль Вашей сети Wifi
+#define WIFI_SSID "ИМЯ_ВАШЕГО_WIFI"
+#define WIFI_PASSWORD "ПАРОЛЬ_ВАШЕГО_WIFI"
+// Телеграм Бот Токен, можно получить у бота @BotFather в Телеграмм
+#define BOT_TOKEN "ВАШ_ТОКЕН" // НЕ ДЕЛИТЕСЬ ИМ
 
 const unsigned long BOT_MTBS = 1000; // Через сколько времени проверять сообщения
 
@@ -108,7 +107,6 @@ void handleNewMessages(int numNewMessages)
   }
 }
 
-
 void setup()
 {
   Serial.begin(115200);
@@ -118,7 +116,7 @@ void setup()
   delay(10);
   analogWrite(ledPin, 255); // По умолчанию светодиод выключен
 
-  servo.attach(servoPin);  // Подключаем сервопривод к указанному пину
+  servo.attach(servoPin); // Подключаем сервопривод к указанному пину
 
   configTime(0, 0, "pool.ntp.org");      // получаем UTC time
   secured_client.setTrustAnchors(&cert); // Добавление root сертификата для api.telegram.org
