@@ -1,55 +1,178 @@
-#include <ESP8266WiFi.h>
-#include <ESP8266WebServer.h>
+/*
+  26.11.2024 Переработано: Merrcurys  https://github.com/Merrcurys
+  Теперь скетч выводит только температуру CPU
 
-const char *ssid = "<..json..>"; // Название сети WiFi
-const char *password = "12345679"; // Пароль для подключения
+  Общее описание:
+  - Вывод температуры CPU на внешний LCD дисплей
+  - Для работы необходима программа ОНМ, лежит в этой же папке
 
-const char* ledOnAddress = "/led/on";
+  Программа HardwareMonitorPlus  https://github.com/AlexGyver/PCdisplay
+  - Запустить OpenHardwareMonitor.exe
+  - Options/Serial/Config - проверить настройки параметров работы
+    - PORT address - адрес порта, куда подключена Ардуина
+    - TEMP source - источник показаний температуры (процессор)
+  - Options/Serial/Run - запуск соединения с Ардуиной
+*/
 
-const char* ledOffAddress = "/led/off";
-ESP8266WebServer server(80); // Создаем веб сервер на 80 порту
+// <-------------------- БИБЛИОТЕКИ ----------------------
+#include <string.h>            // библиотека строк
+#include <LiquidCrystal_I2C.h> // библиотека дисплея
+// --------------------- БИБЛИОТЕКИ --------------------->
 
-// Метод формирует стартовую страницу 192.168.4.1
-// Выводит в браузер текущее состояние диода и две кнопки
-void handleRoot() {
-  String s = "<h1>LED</h1>";
-  s += "<h2>LED On ";
-  s += "LED Off</h2>";
-  server.send(200, "text/html", s);
+// <-------------------- ОПРЕДЕЛЕНИЕ ДРАЙВЕРА ДИСПЛЕЯ ----------------------
+#define DRIVER_VERSION 1 // маркировка драйвера 4АТ - 0, 4T - 1
+LiquidCrystal_I2C lcd(DRIVER_VERSION ? 0x27 : 0x3f, 16, 2);
+// --------------------- ОПРЕДЕЛЕНИЕ ДРАЙВЕРА ДИСПЛЕЯ --------------------->
+
+// <---------------- СИМВОЛЫ ДЛЯ LCD-ДИСПЛЕЯ ------------------
+#define DEGREE 223
+
+#define PROGRESS_BAR_LEFT_CAP 0
+#define PROGRESS_BAR_EMPTY_SEGMENT 1
+#define PROGRESS_BAR_FULL_SEGMENT 2
+#define PROGRESS_BAR_RIGHT_CAP 3
+
+byte PROGRESS_BAR_LEFT_CAP_DATA[8] = {0b11111, 0b10000, 0b10000, 0b10000, 0b10000, 0b10000, 0b10000, 0b11111};
+byte PROGRESS_BAR_EMPTY_SEGMENT_DATA[8] = {0b11111, 0b00000, 0b00000, 0b00000, 0b00000, 0b00000, 0b00000, 0b11111};
+byte PROGRESS_BAR_FULL_SEGMENT_DATA[8] = {0b11111, 0b11111, 0b11111, 0b11111, 0b11111, 0b11111, 0b11111, 0b11111};
+byte PROGRESS_BAR_RIGHT_CAP_DATA[8] = {0b11111, 0b00001, 0b00001, 0b00001, 0b00001, 0b00001, 0b00001, 0b11111};
+// ----------------- СИМВОЛЫ ДЛЯ LCD-ДИСПЛЕЯ ----------------->
+
+// <---------------- ПЕРЕМЕННЫЕ ------------------
+char inData[108]; // массив входных значений (СИМВОЛЫ)
+int PCdata[26];   // массив показаний с компьютера / PCdata[0] - CPU
+byte index = 0;
+unsigned long timeout;
+bool clearDisplayFlag = true, connectLostFlag = true;
+bool updateDisplayFlag;
+// ----------------- ПЕРЕМЕННЫЕ ----------------->
+
+// <------------------------------- SETUP / LOOP --------------------------------
+void setup()
+{
+  Serial.begin(9600);
+  lcd.init();
+  lcd.backlight();
+  lcd.clear();
+  createSymbols();
+  drawLoadDisplay(); // отображаем загрузочный экран
 }
 
-// Метод включения диода
-void ledOn() {
-  digitalWrite(BUILTIN_LED, HIGH);
-  // Перенаправление обратно на стартовую страницу
-  server.sendHeader("Location", String("/"), true);
-  server.send ( 302, "text/plain", "");
+void loop()
+{
+  // getCpuTemp();     // получаем температуру CPU
+  getCpuTempPass(); // заглушка температуры CPU
+  updateDisplay();  // обновляем температуру
+  checkConnect();   // проверяем соединение
+}
+// -------------------------------- SETUP / LOOP ------------------------------->
+
+// <------------------------- ВСПОМОГАТЕЛЬНЫЕ МЕТОДЫ --------------------------
+void createSymbols()
+{
+  /* Создание символов шкалы */
+  lcd.createChar(PROGRESS_BAR_LEFT_CAP, PROGRESS_BAR_LEFT_CAP_DATA);
+  lcd.createChar(PROGRESS_BAR_EMPTY_SEGMENT, PROGRESS_BAR_EMPTY_SEGMENT_DATA);
+  lcd.createChar(PROGRESS_BAR_FULL_SEGMENT, PROGRESS_BAR_FULL_SEGMENT_DATA);
+  lcd.createChar(PROGRESS_BAR_RIGHT_CAP, PROGRESS_BAR_RIGHT_CAP_DATA);
 }
 
-// Метод выключения диода
-void ledOff() {
-  digitalWrite(BUILTIN_LED, LOW);
-  // Перенаправление обратно на стартовую страницу
-  server.sendHeader("Location", String("/"), true);
-  server.send ( 302, "text/plain", "");
+void drawLoadDisplay()
+{
+  /* Отображение загрузочного экрана */
+  lcd.setCursor(4, 0);
+  lcd.print("CPU TEMP");
+  lcd.setCursor(2, 1);
+  lcd.print("by MERRCURYS");
+  delay(3000);
+  lcd.clear();
 }
 
-// Функция настройки. Выполняется один раз при запуске
-void setup() {
-  delay(1000); // Ждём секунду
-  WiFi.softAP(ssid, password); // Создаём точку WiFi
-  // Указываем по каким роутам какие методы запускать
-  server.on("/", handleRoot);
-  server.on("/led/on", ledOff);
-  server.on("/led/off", ledOn);6s
-  server.begin();
-  // Диод по умолчанию выключен
-  pinMode(BUILTIN_LED, OUTPUT);
-  digitalWrite(BUILTIN_LED, LOW);
+void getCpuTemp()
+{
+  /* Парсинг данных с программы ОНМ */
+  while (Serial.available() > 0)
+  {
+    char aChar = Serial.read();
+    if (aChar == 'E')
+    {
+      char *p = inData;
+      char *str;
+      index = 0;
+      while ((str = strtok_r(p, ";", &p)) != NULL)
+      {
+        PCdata[index++] = atoi(str);
+      }
+      index = 0;
+      updateDisplayFlag = true;
+    }
+    else
+    {
+      inData[index++] = aChar;
+      inData[index] = '\0';
+    }
+    timeout = millis();
+    connectLostFlag = true;
+  }
 }
 
-// Основной цикл программы
-void loop() {
-  // Ждём подключения
-  server.handleClient();
+void getCpuTempPass()
+{
+  /* Заглушка для тестирования без программы */
+  updateDisplayFlag = true;
+  PCdata[0] = 69; // заглушка температуры
+  timeout = millis();
 }
+
+void updateDisplay()
+{
+  /* Обновление дисплея */
+  if (updateDisplayFlag)
+  {
+    if (clearDisplayFlag)
+    {
+      lcd.clear();
+      clearDisplayFlag = false;
+    }
+    drawCpuTemperature();
+    updateDisplayFlag = false;
+  }
+}
+
+void drawCpuTemperature()
+{
+  /* Отображение температуры CPU и шкалы */
+  lcd.setCursor(1, 0);
+  lcd.print("PYTHON FOREVER"); // сюда можно любое слово
+  lcd.setCursor(1, 1);
+  lcd.print("CPU:");
+  lcd.print(PCdata[0]);
+  lcd.write(DEGREE);
+
+  // при +96С будет заполнена вся шкала, настраивайте через делитель
+  byte line = min((byte)ceil(PCdata[0] / 16), (byte)6);
+  lcd.setCursor(9, 1);
+
+  lcd.write(line == 0 ? PROGRESS_BAR_LEFT_CAP : PROGRESS_BAR_FULL_SEGMENT);
+  for (int n = 1; n < 5; n++)
+  {
+    lcd.write(n < line ? PROGRESS_BAR_FULL_SEGMENT : PROGRESS_BAR_EMPTY_SEGMENT);
+  }
+  lcd.write(line == 6 ? PROGRESS_BAR_FULL_SEGMENT : PROGRESS_BAR_RIGHT_CAP);
+}
+
+void checkConnect()
+{
+  /* Отображение потери соединия */
+  if (millis() - timeout > 5000 && connectLostFlag)
+  {
+    lcd.clear();
+    lcd.setCursor(4, 0);
+    lcd.print("COM PORT");
+    lcd.setCursor(2, 1);
+    lcd.print("DISCONNECTED");
+    clearDisplayFlag = true;
+    connectLostFlag = false;
+  }
+}
+// -------------------------- ВСПОМОГАТЕЛЬНЫЕ МЕТОДЫ -------------------------->
