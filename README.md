@@ -19,6 +19,7 @@
 * [Практическая работа 11](https://github.com/Archive-of-practical-work-for-the-MPT/Homework-Arduino/tree/Bluetooth) - Создание гирлянды с настройкой через Bluetooth-модуль HC-06
 * [Практическая работа 12](https://github.com/Archive-of-practical-work-for-the-MPT/Homework-Arduino/tree/RFID) - Работа с RFID-модулем
 * [Практическая работа 13](https://github.com/Archive-of-practical-work-for-the-MPT/Homework-Arduino/tree/unity) - Взаимодействие Arduino и Unity
+* [Практическая работа 13.2](https://github.com/Archive-of-practical-work-for-the-MPT/Homework-Arduino/tree/CarLine) - Сборка и создание простейших управляющих программ для робота на Arduino
 
 # Практическая работа 9 - Интерфейс UART
 
