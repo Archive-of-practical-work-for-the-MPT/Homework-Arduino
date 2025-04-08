@@ -25,6 +25,8 @@
 ## Описание
 Проект сделан на основе [статьи](https://randomnerdtutorials.com/esp8266-nodemcu-web-server-websocket-sliders).
 
+Скачайте файлы и откройте папку через PlatformIO в VSC.
+
 ## Цель
 
 Работа с WiFi-модулем WeMos D1 R2
