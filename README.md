@@ -4,10 +4,11 @@
 Как сделать чтобы работало?
 - Соберите последовательно робота как показано на схеме
 - Загрузите скетч на Arduino
-- Откройте Arduino Bluetooth Controller
-- Выберите Car Controller
-- Подключитесь к HC-06 (пароль 1234 или 1111)
-- Управляйте машинкой, можно управлять самому, а также есть автоматическое следование за линией.
+- Скачайте на телефон [Arduino Bluetooth Controller](https://play.google.com/store/apps/details?id=com.giristudio.hc05.bluetooth.arduino.control)
+- Откройте приложение и выберите Car Controller
+- Через приложение подключитесь к BT он будет называться HC-06.
+- Возможно потребует пароль, попробуйте 1234 или 1111
+- Теперь можете управляйте машинкой. Можно управлять самому, а также есть автоматическое следование за линией при нажатии на кнопку вперед.
 
 ## Цель
 Задание 1. Сборка:
@@ -24,16 +25,19 @@
 ## Схема подключения
 
 <p align="center">
-      <img src="https://github.com/user-attachments/assets/38d4b57c-2b98-437f-9c55-17b91fcb085a" alt="Схема подключения" width="500">
+      <img src="https://github.com/user-attachments/assets/38d4b57c-2b98-437f-9c55-17b91fcb085a" alt="Схема подключения" width="700">
 </p>
 
 <p align="center">
       <img src="https://github.com/user-attachments/assets/9efb955a-dbfb-41f1-8705-4a2787844d7e" alt="Схема подключения" width="500">
       <img src="https://github.com/user-attachments/assets/e778b4a0-5397-483e-8950-84fc2474ac3f" alt="Схема подключения" width="500">
+      <img src="https://github.com/user-attachments/assets/9dac17e4-d06a-4360-be31-7c1e9e6a3419" alt="Схема подключения BT" width="500">
 </p>
 
+> ⚠️ **Внимание!** BT-модуль подключается не в 3 и 2 порт, а в 9 и 8.
+
 <p align="center">
-      <img src="https://github.com/user-attachments/assets/c525d5c6-9b5d-4e45-bf1a-241234266a6c" alt="Arduino Bluetooth Controller" width="500">
+      <img src="https://github.com/user-attachments/assets/c525d5c6-9b5d-4e45-bf1a-241234266a6c" alt="Arduino Bluetooth Controller" width="700">
 </p>
 
 ## Вывод
