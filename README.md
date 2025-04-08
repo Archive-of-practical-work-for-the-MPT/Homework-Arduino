@@ -31,7 +31,6 @@
 <p align="center">
       <img src="https://github.com/user-attachments/assets/9efb955a-dbfb-41f1-8705-4a2787844d7e" alt="Схема подключения" width="500">
       <img src="https://github.com/user-attachments/assets/e778b4a0-5397-483e-8950-84fc2474ac3f" alt="Схема подключения" width="500">
-      <img src="https://github.com/user-attachments/assets/9dac17e4-d06a-4360-be31-7c1e9e6a3419" alt="Схема подключения BT" width="500">
 </p>
 
 > ⚠️ **Внимание!** BT-модуль подключается не в 3 и 2 порт, а в 9 и 8.
