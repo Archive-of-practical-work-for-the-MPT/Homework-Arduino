@@ -4,13 +4,15 @@
 
   Общее описание:
   - Вывод температуры CPU на внешний LCD дисплей
-  - Для работы необходима программа ОНМ, лежит в этой же папке
+  - Для работы необходима программа LHM, лежит в папке Libre Hardware Monitor
 
-  Программа HardwareMonitorPlus  https://github.com/AlexGyver/PCdisplay
-  - Запустить OpenHardwareMonitor.exe
+  Программа LibreHardwareMonitor https://github.com/AlexGyver/PCdisplay
+  - Запустить LibreHardwareMonitor.exe
+  - File/Hardware - отключить все кроме CPU
+    - Убедитесь, что есть колонка Temperatures в программе
   - Options/Serial/Config - проверить настройки параметров работы
     - PORT address - адрес порта, куда подключена Ардуина
-    - TEMP source - источник показаний температуры (процессор)
+    - TEMP source - источник показаний температуры (CPU only)
   - Options/Serial/Run - запуск соединения с Ардуиной
 */
 
@@ -60,10 +62,9 @@ void setup()
 
 void loop()
 {
-  // getCpuTemp();     // получаем температуру CPU
-  getCpuTempPass(); // заглушка температуры CPU
-  updateDisplay();  // обновляем температуру
-  checkConnect();   // проверяем соединение
+  getCpuTemp();    // получаем температуру CPU
+  updateDisplay(); // обновляем температуру
+  checkConnect();  // проверяем соединение
 }
 // -------------------------------- SETUP / LOOP ------------------------------->
 
@@ -114,14 +115,6 @@ void getCpuTemp()
     timeout = millis();
     connectLostFlag = true;
   }
-}
-
-void getCpuTempPass()
-{
-  /* Заглушка для тестирования без программы */
-  updateDisplayFlag = true;
-  PCdata[0] = 69; // заглушка температуры
-  timeout = millis();
 }
 
 void updateDisplay()
